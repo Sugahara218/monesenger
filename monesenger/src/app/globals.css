@@ -2,32 +2,899 @@
 @tailwind components;
 @tailwind utilities;
 
+/* カスタムカラー変数 */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --gold-400: #fbbf24;
+  --gold-500: #f59e0b;
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/* ベースのスタイリング */
+@layer base {
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+/* コンポーネントレイヤー */
+@layer components {
+  /* ガラスモーフィズムカード */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* フローティングアニメーション */
+  .floating {
+    animation: floating 6s ease-in-out infinite;
+  }
+  
+  @keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  /* ホバーエフェクト */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* グラデーションテキスト */
+  .gradient-text {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+  
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* ナビゲーションリンクホバー */
+  .nav-link {
+    position: relative;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .nav-link:hover::before {
+    opacity: 1;
+  }
+  
+  .nav-link:hover {
+    transform: translateY(-2px);
+    color: #fbbf24;
+  }
+  
+  .main{
+    margin:5%;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* メインコンテナ */
+  .main-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* ヘッダーのガラス効果 */
+  .header-glass {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* フッターのスタイル */
+  .footer-glass {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* パルスアニメーション */
+  .pulse-slow {
+    animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  /* シマーエフェクト */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* 検索フォームスタイル */
+  .search-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .search-input {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-input::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  .search-input:focus {
+    border-color: rgba(251, 191, 36, 0.5);
+    box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .search-input:focus::before {
+    left: 100%;
+  }
+
+  .search-form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .camera-button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .camera-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .camera-button:hover::before {
+    opacity: 1;
+  }
+
+  .camera-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .search-button {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .search-button:hover::before {
+    opacity: 1;
+  }
+
+  .search-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
+  }
+
+  .search-button:disabled {
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* 結果カードスタイル */
+  .result-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    animation: slideUp 0.6s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* タイムラインスタイル */
+  .timeline {
+    position: relative;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #fbbf24, #f59e0b, #d97706);
+    border-radius: 1px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1.5rem;
+    animation: fadeInLeft 0.8s ease-out;
+  }
+
+  .timeline-item:nth-child(even) {
+    animation-delay: 0.2s;
+  }
+
+  .timeline-item:nth-child(odd) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -6px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.1);
+    }
+  }
+
+  /* メッセージカード */
+  .message-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+  }
+
+  .message-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+  }
+
+  /* スピニングローダー */
+  .loading-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    border-top-color: #000;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 0.5rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* タイトルアニメーション */
+  .title-glow {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes titleGlow {
+    from {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+    to {
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 40px rgba(251, 191, 36, 0.3);
+    }
+  }
+
+  /* 登録フォームスタイル */
+  .register-form-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .register-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.5), transparent);
+  }
+
+  .register-form-style {
+    padding: 24px;
+  }
+
+  .form-field {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .form-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: white;
+    font-size: 0.875rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: rgba(251, 191, 36, 0.6);
+    box-shadow: 
+      0 0 0 4px rgba(251, 191, 36, 0.1),
+      0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .form-input:focus + .form-label {
+    color: #fbbf24;
+  }
+
+  .form-textarea {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.875rem;
+    resize: vertical;
+    min-height: 120px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .form-textarea:focus {
+    outline: none;
+    border-color: rgba(251, 191, 36, 0.6);
+    box-shadow: 
+      0 0 0 4px rgba(251, 191, 36, 0.1),
+      0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .register-button {
+    width: 100%;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 12px;
+    padding: 0.875rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .register-button-Simple {
+    width: 10%;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 12px;
+    padding: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .register-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .register-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(251, 191, 36, 0.4);
+  }
+
+  .register-button:hover::before {
+    opacity: 1;
+  }
+
+  .register-button:active {
+    transform: translateY(-1px);
+  }
+
+  .success-message {
+    background: rgba(34, 197, 94, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    color: #22c55e;
+    text-align: center;
+    animation: successSlide 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .success-message::before {
+    content: '✓';
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #22c55e;
+  }
+
+  @keyframes successSlide {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .input-group .form-input {
+    flex: 1;
+  }
+
+  .camera-button-register {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 48px;
+  }
+
+  .camera-button-register:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+  }
+
+  /* フォームフィールドアニメーション */
+  .form-field {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .form-field:nth-child(1) { animation-delay: 0.1s; }
+  .form-field:nth-child(2) { animation-delay: 0.2s; }
+  .form-field:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* OCRメッセージ用スタイル */
+  .ocr-message {
+    background: rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: #60a5fa;
+    text-align: center;
+    animation: ocrPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes ocrPulse {
+    0%, 100% {
+      background: rgba(59, 130, 246, 0.1);
+    }
+    50% {
+      background: rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  /* ヘッダースタイル */
+  .main-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .main-header::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.5), transparent);
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(135deg, #ffffff, #fbbf24, #f59e0b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: logoShimmer 4s ease-in-out infinite;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+
+  .logo:hover {
+    transform: translateY(-2px) scale(1.05);
+    filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.3));
+  }
+
+  .logo:hover::after {
+    opacity: 1;
+  }
+
+  @keyframes logoShimmer {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .nav-link-header {
+    position: relative;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .nav-link-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(251, 191, 36, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .nav-link-header:hover::before {
+    left: 100%;
+  }
+
+  .nav-link-header:hover {
+    color: #fbbf24;
+    transform: translateY(-2px);
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.3);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+  }
+
+  .nav-link-header.active {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.15);
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+  }
+
+  /* モバイルメニュー */
+  .mobile-menu-button {
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+
+  .mobile-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .mobile-nav.active {
+    display: block;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-nav .nav-link-header {
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  /* レスポンシブデザイン */
+  @media (max-width: 768px) {
+    .main-nav {
+      display: none;
+    }
+    
+    .mobile-menu-button {
+      display: block;
+    }
+    
+    .header-container {
+      padding: 0 1rem;
+    }
+    
+    .logo {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* ヘッダースクロール効果 */
+  .header-scrolled {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(30px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .header-scrolled .logo {
+    font-size: 1.25rem;
   }
 }

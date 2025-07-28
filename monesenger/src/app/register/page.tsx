@@ -48,66 +48,71 @@ export default function RegisterPage() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">思い出を登録</h1>
-        <p className="mt-3 text-lg text-gray-400">お札の番号と、それにまつわるストーリーを記録しましょう。</p>
-      </div>
+  <div className="text-center">
+    <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl title-glow floating">思い出を登録</h1>
+    <p className="mt-3 text-lg text-gray-300 pulse-slow">お札の番号と、それにまつわるストーリーを記録しましょう。</p>
+  </div>
 
-      {ocrMessage && <p className="text-center text-blue-400">{ocrMessage}</p>}
+  {ocrMessage && <div className="ocr-message mx-auto max-w-xl">{ocrMessage}</div>}
 
-      <div className="mx-auto max-w-xl rounded-lg border border-gray-800 bg-gray-900/50 p-6 sm:p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="register-serial" className="block text-sm font-medium text-gray-300">
-              シリアル番号
-            </label>
-            <div className="mt-2 flex items-center gap-2">
-              <input
-                type="text"
-                id="register-serial"
-                name="serial_number"
-                value={serial}
-                onChange={(e) => setSerial(e.target.value.toUpperCase())}
-                className="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-gold-500 sm:text-sm sm:leading-6"
-                required
-              />
-              <input
-                type="file"
-                id="register-ocr-input"
-                className="hidden"
-                accept="image/*"
-                onChange={(e) => e.target.files && handleOcr(e.target.files[0])}
-              />
-              <label htmlFor="register-ocr-input" className="cursor-pointer rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-600">
-                📷
-              </label>
-            </div>
-          </div>
-          <div>
-            <label htmlFor="story" className="block text-sm font-medium text-gray-300">
-              最初の思い出（ストーリー）
-            </label>
-            <div className="mt-2">
-              <textarea
-                id="story"
-                name="story"
-                value={story}
-                onChange={(e) => setStory(e.target.value)}
-                rows={4}
-                className="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-gold-500 sm:text-sm sm:leading-6"
-                required
-              ></textarea>
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="w-full rounded-md bg-gold-500 px-3.5 py-2.5 text-sm font-semibold text-black shadow-sm hover:bg-gold-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
-          >
-            登録する
-          </button>
-          {message && <p className="mt-4 text-center text-green-400">{message}</p>}
-        </form>
+  <div className="mx-auto max-w-xl register-form-container p-6 sm:p-8">
+    <form onSubmit={handleSubmit} className="register-form-style">
+      <div className="form-field">
+        <label htmlFor="register-serial" className="form-label">
+          シリアル番号
+        </label>
+        <div className="input-group mt-2">
+          <input
+            type="text"
+            id="register-serial"
+            name="serial_number"
+            value={serial}
+            onChange={(e) => setSerial(e.target.value.toUpperCase())}
+            className="form-input"
+            placeholder="例: AB1234567C"
+            required
+          />
+          <input
+            type="file"
+            id="register-ocr-input"
+            className="hidden"
+            accept="image/*"
+            onChange={(e) => e.target.files && handleOcr(e.target.files[0])}
+          />
+          <label htmlFor="register-ocr-input" className="camera-button-register">
+            📷
+          </label>
+        </div>
       </div>
-    </div>
+      
+      <div className="form-field">
+        <label htmlFor="story" className="form-label">
+          思い出（ストーリー）
+        </label>
+        <div className="mt-2">
+          <textarea
+            id="story"
+            name="story"
+            value={story}
+            onChange={(e) => setStory(e.target.value)}
+            rows={4}
+            className="form-textarea"
+            placeholder="このお札にまつわるエピソードや思い出を書いてください..."
+            required
+          ></textarea>
+        </div>
+      </div>
+      
+      <button
+        type="submit"
+        className="register-button"
+      >
+        登録する
+      </button>
+      
+      {message && <div className="success-message">{message}</div>}
+    </form>
+  </div>
+</div>
   );
 }
