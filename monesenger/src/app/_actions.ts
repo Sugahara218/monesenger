@@ -1,11 +1,19 @@
 'use server';
 
+import { enhanceMemoryWithAI } from '@/lib/gemini';
 import { supabase } from '../lib/supabaseClient';
 import { revalidatePath } from 'next/cache';
+
+
+
+
+
 
 export async function addNote(formData: FormData) {
   const serialNumber = formData.get('serial_number') as string;
   const story = formData.get('story') as string;
+  const aiText = await enhanceMemoryWithAI(story);
+
 
   if (!serialNumber || !story) {
     return { message: 'シリアル番号とストーリーの両方を入力してください。' };
@@ -41,16 +49,16 @@ export async function addNote(formData: FormData) {
   // 2. 取得したserialIdを使ってmessagesテーブルにストーリーを挿入
   const { error: messageError } = await supabase
     .from('messages')
-    .insert({ serial_id: serialId, message_text: story });
+    .insert({ serial_id: serialId, message_text: story, ai_text: aiText });
 
   if (messageError) {
     console.error('Error inserting message:', messageError);
     return { message: 'データベースエラーが発生しました。(messages)' };
   }
-  
+  console.log(aiText);
   // データを再検証して一覧ページを更新
   revalidatePath('/serials');
-  return { message: `シリアル番号「${serialNumber}」に新しい思い出を登録しました。` };
+  return { message: `シリアル番号「${serialNumber}」に新しい思い出を登録しました。` , aiMessage: aiText };
 }
 
 export async function searchSerial(serialNumber: string) {

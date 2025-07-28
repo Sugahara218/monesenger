@@ -3,10 +3,17 @@
 import { useState, FormEvent } from 'react';
 import { addNote } from '../_actions';
 
+
+type AiMessageType = {
+  title: string;
+  summary: string;
+};
+
 export default function RegisterPage() {
   const [serial, setSerial] = useState('');
   const [story, setStory] = useState('');
   const [message, setMessage] = useState('');
+  const [aiMessageState, setAiMessageState] = useState<AiMessageType | null>(null);
   const [ocrMessage, setOcrMessage] = useState('');
 
   const handleOcr = async (file: File) => {
@@ -38,12 +45,14 @@ export default function RegisterPage() {
     const formData = new FormData(e.target as HTMLFormElement);
     const result = await addNote(formData);
     setMessage(result.message);
+    setAiMessageState(result.aiMessage ?? null);
 
     if (result.message.includes('登録しました')) {
         setSerial('');
         setStory('');
     }
-    setTimeout(() => setMessage(''), 5000);
+    setTimeout(() => setMessage(''), 10000);
+
   };
 
   return (
@@ -59,7 +68,7 @@ export default function RegisterPage() {
     <form onSubmit={handleSubmit} className="register-form-style">
       <div className="form-field">
         <label htmlFor="register-serial" className="form-label">
-          シリアル番号
+          お札のシリアルナンバー
         </label>
         <div className="input-group mt-2">
           <input
@@ -109,7 +118,12 @@ export default function RegisterPage() {
       >
         登録する
       </button>
-      
+      {aiMessageState && (
+        <div className="success-message">
+          <h2 className='margin-none'>{aiMessageState.title}</h2>
+          <p className='margin-none'>{aiMessageState.summary}</p>
+        </div>
+      )}
       {message && <div className="success-message">{message}</div>}
     </form>
   </div>
