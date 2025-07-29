@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     const prompt = "この画像の中から、9桁の英数字で構成されるシリアル番号を一つだけ抽出してください。それ以外の説明や文字列は一切含めず、シリアル番号のみを返答してください。";
     const imagePart = await fileToGenerativePart(file);
