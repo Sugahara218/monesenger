@@ -4,11 +4,6 @@ import { enhanceMemoryWithAI } from '@/lib/gemini';
 import { supabase } from '../lib/supabaseClient';
 import { revalidatePath } from 'next/cache';
 
-
-
-
-
-
 export async function addNote(formData: FormData) {
   const serialNumber = formData.get('serial_number') as string;
   const story = formData.get('story') as string;
