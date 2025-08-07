@@ -3,6 +3,7 @@
 import RegisterPage from '@/app/register/page'
 import { SignInButton, useAuth } from '@clerk/nextjs';
 import React from 'react'
+// import CheckoutButton from '../stripe/CheckoutButton';
 
 export function LogindPage(){
     // ClerkのuseAuthフックでログイン状態を取得
@@ -11,8 +12,14 @@ export function LogindPage(){
   return (
     <div>
         {isLoaded && isSignedIn && (
-            // ログインしているユーザーには登録ページを表示
-            <RegisterPage />
+            <>
+                {/* <div>
+                    <h1>Stripe導入テスト</h1>
+                    <p>このボタンを押すとStripeの決済ページに移動します。</p>
+                    <CheckoutButton />
+                </div> */}
+                 <RegisterPage />
+            </>
         )}
 
         {isLoaded && !isSignedIn && (

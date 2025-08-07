@@ -9,6 +9,7 @@ export type Message ={
     message_text:string;
     created_at:string;
     ai_text:string | null;
+    like_count:number;
 };
 
 export interface SerialData {

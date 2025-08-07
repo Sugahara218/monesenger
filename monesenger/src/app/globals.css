@@ -112,12 +112,12 @@
   }
   
   .main{
-    margin: 5% 30%;
+    margin: 5% 20%;
   }
 
   @media (max-width: 768px) {
     .main {
-      margin: 5% 0.5%;
+      margin: 5% 2%;
     }
   }
 
@@ -298,6 +298,7 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     animation: slideUp 0.6s ease-out;
+    margin: 0 5%;
   }
 
   @keyframes slideUp {
@@ -383,6 +384,8 @@
     padding: 1rem;
     transition: all 0.3s ease;
     margin-bottom: 0.5rem;
+    border-radius: 10px;
+    background: aliceblue;
   }
 
   .message-card:hover {
@@ -925,9 +928,6 @@
 
   /* レスポンシブデザイン */
   @media (max-width: 768px) {
-    .main-nav {
-      display: none;
-    }
     
     .mobile-menu-button {
       display: block;

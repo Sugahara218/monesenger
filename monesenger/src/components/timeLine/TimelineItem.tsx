@@ -1,4 +1,5 @@
 import type { Message } from '@/hooks/useSearch'; // Message型をインポート
+import LikedButton from './LikedButton';
 
 interface AiMessage {
     ai_text?: string | null;
@@ -40,14 +41,17 @@ export function TimelineItem ({ message }: TimelineItemProps){
         <div key={message.id} className="timeline-item">
             <div className="timeline-dot"></div>
             <div className="message-card">
-            <div className="message-card">
-                <h3 className="font-bold text-white margin-none">{aiResponse.title}</h3>
-                <p className="text-gray-200 mt-1 margin-bottomNone">{aiResponse.summary}</p>
-            </div>
-            <p className="text-gray-200">{message.message_text}</p>
-            <time className="text-xs text-gray-500 block mt-2">
-                {new Date(message.created_at).toLocaleString('ja-JP')}
-            </time>
+                
+                    <h3 className="font-bold text-white margin-none">{aiResponse.title}</h3>
+                    <p className="text-gray-200 mt-1 margin-bottomNone">{aiResponse.summary}</p>
+                <hr/>
+                <p className="text-gray-200">{message.message_text}</p>
+                <div  style={{ display: "flex", justifyContent: "flex-end", gap: "2rem" }}>
+                    <time className="text-xs text-gray-500 block mt-2">
+                        {new Date(message.created_at).toLocaleString('ja-JP')}
+                    </time>
+                    <LikedButton />
+                </div>
             </div>
         </div>
     )

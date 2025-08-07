@@ -94,7 +94,7 @@ export default function RegisterPage() {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl title-glow floating">思い出を登録</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl title-glow floating">想い出を登録</h1>
         <p className="mt-3 text-lg text-gray-300 pulse-slow">お札の番号と、それにまつわるストーリーを記録しましょう。</p>
       </div>
 
