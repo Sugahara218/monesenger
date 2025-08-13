@@ -10,14 +10,6 @@ type AiMessageType = {
   summary: string;
 };
 
-// SVGスピナーコンポーネント（ボタン内に表示するため）
-// const SpinnerIcon = () => (
-//   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-//     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-//     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-//   </svg>
-// );
-
 
 export default function RegisterPage() {
   const [serial, setSerial] = useState('');
@@ -27,7 +19,7 @@ export default function RegisterPage() {
   const [ocrMessage, setOcrMessage] = useState('');
   // 1. フォーム送信中のローディング状態を管理するStateを追加
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // // Clerkのセッション情報（ログイン状態の確認に利用）
   // const { isLoaded, isSignedIn } = useSession();
 
@@ -102,7 +94,6 @@ export default function RegisterPage() {
 
       <div className="mx-auto max-w-xl register-form-container p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="register-form-style">
-          {/* ... (シリアルナンバーとストーリーの入力欄は変更なし) ... */}
           <div className="form-field">
             <label htmlFor="register-serial" className="form-label">お札のシリアルナンバー</label>
             <div className="input-group mt-2">
@@ -117,8 +108,7 @@ export default function RegisterPage() {
               <textarea id="story" name="story" value={story} onChange={(e) => setStory(e.target.value)} rows={4} className="form-textarea" placeholder="このお札にまつわるエピソードや思い出を書いてください..." required></textarea>
             </div>
           </div>
-          
-          {/* 3. ボタンの表示を修正 */}
+
           <button
             type="submit"
             className="register-button"
@@ -130,10 +120,6 @@ export default function RegisterPage() {
                 登録中...
               </span>
             ) : (
-              // <span className="flex items-center justify-center register-button-now">
-              //   <SpinnerIcon/>
-              //   登録中...
-              // </span>
               <span className="">
                 登録する
               </span>

@@ -1,5 +1,4 @@
-import type { Message } from '@/hooks/useSearch'; // Message型をインポート
-import LikedButton from './LikedButton';
+import type { Message } from '@/hooks/useSearch'; 
 
 interface AiMessage {
     ai_text?: string | null;
@@ -50,7 +49,6 @@ export function TimelineItem ({ message }: TimelineItemProps){
                     <time className="text-xs text-gray-500 block mt-2">
                         {new Date(message.created_at).toLocaleString('ja-JP')}
                     </time>
-                    <LikedButton />
                 </div>
             </div>
         </div>

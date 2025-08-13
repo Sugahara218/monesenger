@@ -4,13 +4,15 @@ import { searchSerial } from "@/app/_actions";
 import { FormEvent, useState } from "react";
 
 
-export type Message ={
-    id:number;
-    message_text:string;
-    created_at:string;
-    ai_text:string | null;
-    like_count:number;
-};
+export interface Message {
+  id: number;
+  message_text: string;
+  ai_text?: string;
+  created_at: string;
+  like_count?: number;
+  user_id: string;
+  // 他のプロパティ...
+}
 
 export interface SerialData {
     id: number;
@@ -18,6 +20,7 @@ export interface SerialData {
     created_at: string;
     messages: Message[];
 }
+
 
 export function useSearch(){
     const [serial, setSerial] = useState('');
@@ -57,7 +60,6 @@ export function useSearch(){
         setResult(searchResult || 'not_found');
         setIsLoading(false);
     };
-
 
     return {
       serial,

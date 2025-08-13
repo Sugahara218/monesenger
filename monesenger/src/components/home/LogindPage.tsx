@@ -13,11 +13,6 @@ export function LogindPage(){
     <div>
         {isLoaded && isSignedIn && (
             <>
-                {/* <div>
-                    <h1>Stripe導入テスト</h1>
-                    <p>このボタンを押すとStripeの決済ページに移動します。</p>
-                    <CheckoutButton />
-                </div> */}
                  <RegisterPage />
             </>
         )}

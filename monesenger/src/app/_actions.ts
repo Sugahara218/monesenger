@@ -3,8 +3,10 @@
 import { enhanceMemoryWithAI } from '@/lib/gemini';
 import { supabase } from '../lib/supabaseClient';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@clerk/nextjs/server';
 
 export async function addNote(formData: FormData) {
+
   const serialNumber = formData.get('serial_number') as string;
   const story = formData.get('story') as string;
   const aiText = await enhanceMemoryWithAI(story);
@@ -41,10 +43,13 @@ export async function addNote(formData: FormData) {
     serialId = newSerial.id;
   }
 
+  // ログインユーザーIDを取得
+  const user_id = await auth();
+
   // 2. 取得したserialIdを使ってmessagesテーブルにストーリーを挿入
   const { error: messageError } = await supabase
     .from('messages')
-    .insert({ serial_id: serialId, message_text: story, ai_text: aiText });
+    .insert({ serial_id: serialId, message_text: story, ai_text: aiText ,user_id: user_id.userId ,});
 
   if (messageError) {
     console.error('Error inserting message:', messageError);
@@ -72,4 +77,29 @@ export async function searchSerial(serialNumber: string) {
   }
 
   return data;
+}
+
+
+export async function searchSerialToUser(user_id: string|null) {
+  if (!user_id) return null;
+
+  // user_idが同じメッセージを全て取得し、対応するserialsテーブルの情報も一緒に取得
+  const { data: messagesData, error: messagesError } = await supabase
+    .from('messages')
+    .select(`
+      message_text, 
+      ai_text, 
+      created_at,
+      serial_id,
+      serials!inner(serial_number)
+    `)
+    .eq('user_id', user_id)
+    .order('created_at', { ascending: false });
+
+  if (messagesError) {
+    console.error('Messages search error:', messagesError);
+    return null;
+  }
+
+  return messagesData;
 }

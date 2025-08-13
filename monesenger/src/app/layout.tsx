@@ -5,10 +5,11 @@ import {
   ClerkProvider,
   UserButton,
 } from '@clerk/nextjs'
+import History from "@/components/header/History";
 
 export const metadata: Metadata = {
-  title: "お札の思い出記録帳",
-  description: "お札のシリアル番号に、あなたの思い出を刻みましょう。",
+  title: "お札の想い出記録帳",
+  description: "お札のシリアル番号に、あなたの想い出を刻みましょう。",
 };
 
 export default function RootLayout({
@@ -26,14 +27,11 @@ export default function RootLayout({
                 想い出手帳
               </Link>
               <nav className="main-nav">
-                {/* <Link href="/" className="nav-link-header">
-                  検索
-                </Link> */}
                 <div className='flex flex-row gap-y-4'>
-                  <UserButton afterSignOutUrl='/'/>
+                  <UserButton />
                 </div>
+                <History/>
               </nav>
-              
             </div>
           </header>
           <main className="main">
