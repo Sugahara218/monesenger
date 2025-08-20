@@ -5,6 +5,8 @@ import { SignInButton, useAuth } from '@clerk/nextjs';
 import React from 'react'
 // import CheckoutButton from '../stripe/CheckoutButton';
 
+
+
 export function LogindPage(){
     // ClerkのuseAuthフックでログイン状態を取得
   const { isLoaded, isSignedIn } = useAuth();
@@ -13,7 +15,7 @@ export function LogindPage(){
     <div>
         {isLoaded && isSignedIn && (
             <>
-                 <RegisterPage />
+                 <RegisterPage/>
             </>
         )}
 

@@ -1,22 +1,14 @@
-import { Button } from "@/components/ui/button"
+
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import { MessageWithSerial } from "@/lib/messageQueries";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 
-interface Message {
-  serial_id: number;
-  message_text: string;
-  created_at: string;
-  ai_text: string;
-  serials: {
-    serial_number: string;
-  }[];
-}
-
-const dataFormat = (isoString: string) => {
+export const dataFormat = (isoString: string) => {
   const date = new Date(isoString);
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -29,7 +21,7 @@ const dataFormat = (isoString: string) => {
 export default function PropoverHistory({
   userMessages,
 }: {
-  userMessages: Message[];
+  userMessages: MessageWithSerial[];
 }) {
   return (
     <Popover modal ={true}>
@@ -60,18 +52,24 @@ export default function PropoverHistory({
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {userMessages && userMessages.length > 0 ? userMessages.map((message, index) => {
-                 const aiText = JSON.parse(message.ai_text);
+                {userMessages && userMessages.length > 0 ? userMessages.map((message) => {
+                 let aiText = null;
+                 try {
+                  aiText = message.ai_text ? JSON.parse(message.ai_text) : { title: 'No title', summary: 'No summary' };
+                 } catch (error) {
+                  console.error('failed to parse ai_text',error)
+                  aiText = { title: 'Error', summary: 'Failed to parse' };
+                 }
                  return (
                    <div
-                     key={index}
+                     key={`${message.serial_id}-${message.created_at}`}
                      style={{
                        borderBottom: "1px solid #444",
                        paddingBottom: "8px",
                      }}
                    >
                      <p style={{ fontWeight: "bold" }}>
-                       {message.serials[0]?.serial_number}
+                       {message.serials?.serial_number}
                      </p>
                      <h3 style={{ margin: "4px 0", color: "#ccc" }}>
                        {aiText.title}

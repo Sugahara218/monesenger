@@ -2,8 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { addNote } from '../_actions';
-// useAuth の方が推奨ですが、既存のコードに合わせてuseSessionを使います
-// import { useSession } from '@clerk/nextjs'; 
+import { useUserLocation } from '@/components/googleMap/UserLocation';
 
 type AiMessageType = {
   title: string;
@@ -17,14 +16,11 @@ export default function RegisterPage() {
   const [message, setMessage] = useState('');
   const [aiMessageState, setAiMessageState] = useState<AiMessageType | null>(null);
   const [ocrMessage, setOcrMessage] = useState('');
-  // 1. フォーム送信中のローディング状態を管理するStateを追加
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // // Clerkのセッション情報（ログイン状態の確認に利用）
-  // const { isLoaded, isSignedIn } = useSession();
+  //現在地を取得
+  const { location } = useUserLocation(); 
 
   const handleOcr = async (file: File) => {
-    // ... (この関数は変更なし)
     if (!file) return;
     setOcrMessage('AIがシリアル番号を解析中...');
     const formData = new FormData();
@@ -60,7 +56,7 @@ export default function RegisterPage() {
 
     try {
       const formData = new FormData(e.target as HTMLFormElement);
-      const result = await addNote(formData);
+      const result = await addNote(formData,location);
       
       setMessage(result.message);
       setAiMessageState(result.aiMessage ?? null);

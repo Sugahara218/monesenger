@@ -985,25 +985,60 @@
     filter: drop-shadow(1px 4px 5px #aaaa);
   }
 
-  .Hotlikesli{
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10%;
-    justify-content: space-around;
-  }
+  /* ======== Gridコンテナのスタイル ======== */
+.Hotlikesul {
+  /* --- レスポンシブ対応のコア部分 --- */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px; /* アイテム間の隙間 */
+  
+  /* --- リストのデフォルトスタイルをリセット --- */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  .Hotlikesul{
-    padding: 0;
-  }
+/* ======== Gridアイテム（カード）のスタイル ======== */
+.Hotlikesli {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  /* コンテンツが溢れた場合に備える */
+  overflow: hidden; 
+  position: relative;
+}
 
-  .Hotlikesli h4{
-    filter: blur(4px);
-  }
-  .Hotlikesli h4 + p{
-    filter: blur(4px);
-  }
+.Hotlikesli:hover {
+  transform: translateY(-5px); /* ホバー時に少し浮き上がるエフェクト */
+}
+
+/* ======== カード内の要素のスタイル ======== */
+.Hotlikesli h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.Hotlikesli p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.Hotlikesli .date {
+  font-size: 0.8em;
+  color: #999;
+  text-align: right; /* 日付を右寄せに */
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.Hotlikesli span{
+  position: absolute;
+  margin-right: 5%;
+  right: 0;
+}
+  
 
   /* レスポンシブデザイン */
   @media (max-width: 768px) {

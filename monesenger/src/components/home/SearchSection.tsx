@@ -4,6 +4,7 @@ import { SearchForm } from '@/components/home/SearchForm';
 import { SearchResult } from '@/components/home/SearchResult';
 import { LogindPage } from './LogindPage';
 
+
 export function SearchSection() {
   const {
     serial,
@@ -33,7 +34,7 @@ export function SearchSection() {
       Clerkの認証状態が読み込み完了(isLoaded)してから、
       ログイン状態(isSignedIn)に応じて表示を切り替える
       */}
-      <LogindPage />
+      <LogindPage/>
     </>
   );
 }

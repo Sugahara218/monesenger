@@ -11,7 +11,9 @@ export interface Message {
   created_at: string;
   like_count?: number;
   user_id: string;
-  // 他のプロパティ...
+  location?: {
+    [key: string]: number;
+  };
 }
 
 export interface SerialData {

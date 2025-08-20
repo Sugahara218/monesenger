@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# お前のアプリ名（例：Money-senger）
+## 「お札の想い出記録帳」
 
-## Getting Started
+###  目的・概要
+日々の紙幣にまつわるエピソードを記録して共有するSNS的な Web アプリ。  
+→ 思い出やお金に関する雑記録を投稿・共有できるサービス。
 
-First, run the development server:
+###  技術スタック
+- フロントエンド：Next.js 15 + TypeScript  
+- バックエンド／DB：Supabase  
+- 認証：Clerk  
+- デプロイ：Vercel  
+- 画像生成や AI 補助機能：Gemini API（必要なら）
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+###  主な機能
+- 投稿の追加・編集・削除  
+- 認証付きユーザーシステム（Clerk）  
+- 投稿フィルター・検索  
+- レスポンシブデザイン対応（スマホ対応）
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+###  成果・データ（もしあれば）
+- 公開してから○日に○ユーザーが使ってくれた！  
+- 何件投稿された！  
+- ドキュメント（README）が丁寧で、GitHubスター○件！
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+###  実装の工夫ポイント
+- SSR や ISR、SEO を考慮したページ設計  
+- Supabase の Realtime や Functions を使った投稿反映の工夫  
+- Form デザイン/バリデーションにこだわった点
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+###  実際に操作してみてほしい
+[こちらから操作可能！]()（Vercel プレビュー URL）  
+※ GitHub リポジトリも公開中 → [こちら]()
 
-## Learn More
+###  補足（任意）
+- 今後追加したい機能・改善したい点（例：バックエンド強化や設計改善）
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

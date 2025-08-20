@@ -1,4 +1,6 @@
 import React, { FormEvent } from 'react'
+import { useLatLngController } from '../googleMap/MapMove';
+import { searchLocation } from '@/app/_actions';
 
 export const SearchForm = ({
   handleSearch,
@@ -13,9 +15,19 @@ export const SearchForm = ({
   handleOcr: (file: File) => void;
   isLoading: boolean;
 }) => {
+  const moveMap = useLatLngController();
   return (
     <div className="mx-auto max-w-xl search-container">
-        <form onSubmit={handleSearch} className="search-form">
+        <form onSubmit={async (e)=>{
+          handleSearch(e);
+          const res = await searchLocation(serial);
+          console.log(res);
+          if (res?.locations?.length && res?.locations[0] !== null) {
+            const { lat, lng } = res?.locations[0];
+            console.log(lat, lng);
+            moveMap({ lat, lng });
+          }
+        }} className="search-form">
           <input
             type="text"
             value={serial}
@@ -38,6 +50,7 @@ export const SearchForm = ({
             type="submit"
             disabled={isLoading}
             className="register-button-Simple"
+            
           >
             {isLoading ? (
               <>

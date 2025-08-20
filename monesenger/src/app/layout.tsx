@@ -6,6 +6,7 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import History from "@/components/header/History";
+import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
 
 export const metadata: Metadata = {
   title: "お札の想い出記録帳",
@@ -34,9 +35,11 @@ export default function RootLayout({
               </nav>
             </div>
           </header>
-          <main className="main">
-            {children}
-          </main>
+          <GoogleMapsProvider>
+            <main className="main">
+              {children}
+            </main>
+          </GoogleMapsProvider>
           <footer className="mt-16 border-t border-gray-800 py-8 text-center text-sm text-gray-500">
             <p>&copy; {new Date().getFullYear()} Monesenger. All rights reserved.</p>
           </footer>
