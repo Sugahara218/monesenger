@@ -12,12 +12,10 @@ interface LocationData {
   loading: boolean;
 }
 
-// 全体のオブジェクト構造を表す型
 interface DBResponse {
   locations: (LocationData | null)[];
 }
 
-// data配列の各要素の型
 interface LocationItem {
   id: number; 
   serial_id: string;
@@ -26,12 +24,11 @@ interface LocationItem {
   ai_text: string,
 }
 
-// この関数が返すオブジェクトの型
 interface DBResponseHaveID {
   locations: LocationItem[];
 }
 
-export async function addNote(formData: FormData,location:object) {
+export async function addNote(formData: FormData,location:object){
 
   const serialNumber = formData.get('serial_number') as string;
   const story = formData.get('story') as string;
@@ -43,7 +40,6 @@ export async function addNote(formData: FormData,location:object) {
 
   let serialId: number;
 
-  // 1. シリアル番号が既に存在するか確認
   const { data: existingSerial } = await supabase
     .from('serials')
     .select('id')
@@ -51,10 +47,8 @@ export async function addNote(formData: FormData,location:object) {
     .single();
 
   if (existingSerial) {
-    // 存在する場合、そのIDを使用
     serialId = existingSerial.id;
   } else {
-    // 存在しない場合、新しく挿入してIDを取得
     const { data: newSerial, error: insertError } = await supabase
       .from('serials')
       .insert({ serial_number: serialNumber })
@@ -68,10 +62,8 @@ export async function addNote(formData: FormData,location:object) {
     serialId = newSerial.id;
   }
 
-  // ログインユーザーIDを取得
   const user_id = await auth();
 
-  // 2. 取得したserialIdを使ってmessagesテーブルにストーリーを挿入
   const { error: messageError } = await supabase
     .from('messages')
     .insert({ serial_id: serialId, message_text: story, ai_text: aiText ,user_id: user_id.userId ,location:location});
@@ -81,7 +73,6 @@ export async function addNote(formData: FormData,location:object) {
     return { message: 'データベースエラーが発生しました。(messages)' };
   }
   console.log(aiText);
-  // データを再検証して一覧ページを更新
   revalidatePath('/serials');
   return { message: `シリアル番号「${serialNumber}」に新しい思い出を登録しました。` , aiMessage: aiText };
 }
@@ -104,11 +95,9 @@ export async function searchSerial(serialNumber: string) {
   return data;
 }
 
-
 export async function searchSerialToUser(user_id: string|null): Promise<MessageWithSerial[] | null> {
   if (!user_id) return null;
 
-  // user_idが同じメッセージを全て取得し、対応するserialsテーブルの情報も一緒に取得
   const { data: messagesData, error: messagesError } = await supabase
     .from('messages')
     .select(`
@@ -131,7 +120,6 @@ export async function searchSerialToUser(user_id: string|null): Promise<MessageW
     return null;
   }
 
-  // Supabaseからのデータ（serialsが配列）の型を定義
   type SupabaseMessage = {
     id: number;
     message_text: string;
@@ -143,10 +131,8 @@ export async function searchSerialToUser(user_id: string|null): Promise<MessageW
     }[];
   };
 
-  // anyの代わりに定義した型を使い、データを安全に変換
   const formattedData = (messagesData as SupabaseMessage[]).map((message) => ({
     ...message,
-    // serialsが配列で、要素が1つ以上あることを確認してから最初の要素をセット
     serials: (message.serials && message.serials.length > 0) ? message.serials[0] : { serial_number: '' },
   }));
 
@@ -158,15 +144,11 @@ export async function searchLocation(serialNumber:string) {
 
   const { data, error } = await supabase
     .from('messages')
-    // 1. 取得したいのは 'location' カラム
-    // 2. serials テーブルと INNER JOIN するために `!inner` を指定
     .select(`
       location,
       serials!inner()
     `)
-    // 3. JOINしたserialsテーブルの 'serial_number' カラムで絞り込む
     .eq('serials.serial_number', serialNumber)
-    // 任意: 新しいメッセージから順に並び替え
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -195,9 +177,7 @@ export async function searchLocation(serialNumber:string) {
 export async function searchLocationsInBounds(north: number, south: number, east: number, west: number) {
 
   console.log(north,south,east,west);
-  // ->> 演算子でJSON内のキー（lat, lng）をテキストとして抽出し、数値として比較します
   const { data, error } = await supabase.rpc('search_locations_in_bounds_v2', {
-    // SQL関数で定義した引数名をキーとして値を渡す
     north,
     south,
     east,

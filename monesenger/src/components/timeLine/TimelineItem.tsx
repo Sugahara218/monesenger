@@ -9,7 +9,6 @@ interface ParsedAiResponse {
     summary: string;
 }
 
-// Propsの型を定義
 type TimelineItemProps = {
     message: Message;
 };

@@ -12,12 +12,9 @@ type RealtimeMessagesProps = {
 };
 
 export function truncateString(str:string, maxLength:number) {
-    // 文字列の長さが最大長以下なら、そのまま返す
     if (str.length <= maxLength) {
       return str;
     }
-  
-    // 最大長を超えていれば、文字列を切り取って末尾に「...」を付ける
     return str.substring(0, maxLength) + '...';
 }
 
@@ -28,11 +25,9 @@ export default function NewPostsItem ({ serverMessages }: RealtimeMessagesProps)
     const [messages, setMessages] = useState([...serverMessages].reverse());
 
     useEffect(() => {
-        // こちらも同様に逆順にしてstateを更新
         setMessages([...serverMessages].reverse());
     }, [serverMessages]);
 
-    // リアルタイム購読のロジック
     useEffect(() => {
         const channel = supabase
         .channel('realtime messages')
@@ -44,12 +39,10 @@ export default function NewPostsItem ({ serverMessages }: RealtimeMessagesProps)
             table: 'messages',
             },
             () => {
-            // サーバーに最新データを再度問い合わせる
             router.refresh();
             }
         )
     .subscribe();
-    // コンポーネントが不要になったら購読を解除
     return () => {
         supabase.removeChannel(channel);
       };
@@ -59,7 +52,6 @@ export default function NewPostsItem ({ serverMessages }: RealtimeMessagesProps)
         <ul className="Hotlikesul">
             {messages.map((message) => {
                 const aiText = message.ai_text ? JSON.parse(message.ai_text) : null;
-                // console.log('Message data:', message); // デバッグ用
                 return (
                     <li className="Hotlikesli" key={message.id} >
                         <span className="HotlikesSpan">{message.serials?.serial_number || 'No serial'}</span>

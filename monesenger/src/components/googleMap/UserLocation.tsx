@@ -15,13 +15,11 @@ const options = {
     maximumAge: 0,
 };
 
-// 1. 名前を 'use' で始める
 export function useUserLocation() {
     const [location, setLocation] = useState<LocationState>({
-        loading: true, // 初期状態はローディング
+        loading: true, 
     });
 
-    // useCallbackで関数をメモ化し、不要な再生成を防ぐ
     const getLocation = useCallback(() => {
         setLocation(prev => ({ ...prev, loading: true }));
         
@@ -44,7 +42,6 @@ export function useUserLocation() {
                 });
             },
             (error) => {
-                // console.error("Geolocation Error:", error); 
                 setLocation(prev => ({
                     ...prev,
                     loading: false,
@@ -53,13 +50,11 @@ export function useUserLocation() {
             },
             options,
         );
-    }, []); // 依存配列が空なので、この関数は一度しか生成されない
+    }, []); 
 
-    // 2. useEffectでコンポーネントマウント時に一度だけ実行
     useEffect(() => {
         getLocation();
-    }, [getLocation]); // getLocationは不変なので、実質一度だけ実行
+    }, [getLocation]);
 
-    // 3. location state と、手動で再取得するための getLocation 関数を返す
     return { location, getLocation };
 }

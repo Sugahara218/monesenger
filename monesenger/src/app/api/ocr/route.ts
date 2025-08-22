@@ -2,10 +2,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 
-// Get API key from environment variables
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
 
-// Function to convert a file to a base64 string
 async function fileToGenerativePart(file: File) {
   const base64EncodedData = Buffer.from(await file.arrayBuffer()).toString("base64");
   return {
@@ -34,7 +32,6 @@ export async function POST(req: NextRequest) {
     const response = await result.response;
     const text = response.text();
 
-    // Clean up the response to ensure it's only the serial number
     const serial = text.trim().replace(/\s/g, '');
 
     return NextResponse.json({ serial });

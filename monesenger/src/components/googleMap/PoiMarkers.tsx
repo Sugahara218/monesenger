@@ -23,7 +23,6 @@ export const PoiMarkers = (props: { pois: Poi[] }) => {
       setMarkers({});
     },[props.pois])
   
-    // Update markers, if the markers array has changed
     useEffect(() => {
       clusterer.current?.clearMarkers();
       const markerValues = Object.values(markers);
@@ -65,10 +64,6 @@ export const PoiMarkers = (props: { pois: Poi[] }) => {
                   <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
                 </AdvancedMarker>
                 
-                {/* 
-                  activeMarkerIdとpoi.keyが一致する場合にのみ、
-                  InfoWindowコンポーネントを描画します。
-                */}
                 {activeMarkerId === poi.key && (
                   <InfoWindow
                     position={poi.location} 

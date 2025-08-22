@@ -17,7 +17,6 @@ export default function RegisterPage() {
   const [aiMessageState, setAiMessageState] = useState<AiMessageType | null>(null);
   const [ocrMessage, setOcrMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //現在地を取得
   const { location } = useUserLocation(); 
 
   const handleOcr = async (file: File) => {
@@ -44,14 +43,11 @@ export default function RegisterPage() {
     }
   };
 
-  // 2. handleSubmit関数を修正
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // 以前のメッセージをクリア
     setMessage('');
     setAiMessageState(null);
-    // ローディング開始
     setIsSubmitting(true);
 
     try {
@@ -69,9 +65,7 @@ export default function RegisterPage() {
       console.error('登録エラー:', error);
       setMessage('登録中にエラーが発生しました。もう一度お試しください。');
     } finally {
-      // 処理が成功しても失敗しても、必ずローディングを終了
       setIsSubmitting(false);
-      // メッセージを10秒後に消す
       setTimeout(() => {
         setMessage('');
         setAiMessageState(null);
@@ -108,7 +102,6 @@ export default function RegisterPage() {
           <button
             type="submit"
             className="register-button"
-            // isSubmittingがtrueの間、ボタンを無効化する
             disabled={isSubmitting} 
           >
             {isSubmitting ? (

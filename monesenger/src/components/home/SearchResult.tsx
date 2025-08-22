@@ -1,4 +1,4 @@
-import type { SerialData } from '@/hooks/useSearch'; // type を使って型だけをインポート
+import type { SerialData } from '@/hooks/useSearch'; 
 import { Timeline } from '../timeLine/Timeline';
 
 

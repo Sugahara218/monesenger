@@ -2,10 +2,9 @@
 import {  Map as GoogleMap, MapEvent } from '@vis.gl/react-google-maps';
 import { useUserLocation } from './UserLocation';
 import { useEffect, useRef, useState } from 'react';
-// import {Marker, MarkerClusterer} from '@googlemaps/markerclusterer';
 import { searchLocationsInBounds } from '@/app/_actions';
 import { PoiMarkers } from './PoiMarkers';
-
+import { getDistance } from 'geolib';
 
 export interface Poi {
   key: number;
@@ -26,20 +25,13 @@ const defaultCenter = {
   lng: 139.6917337,
 }
 
+//小数第digits位までに整形 Todo:関数をまとめた場所に保管する
+// function truncateDecimal(num:number, digits:number) {
+//   const multiplier = Math.pow(10, digits);
+//   return Math.trunc(num * multiplier) / multiplier;
+// }
 
-
-
-
-
-
-
-
-//小数第4位までに整形
-function truncateDecimal(num:number, digits:number) {
-  const multiplier = Math.pow(10, digits);
-  return Math.trunc(num * multiplier) / multiplier;
-}
-
+// Todo: コードを分離する
 async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
 
   const { north, south, east, west } = bounds;
@@ -52,7 +44,6 @@ async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
   }
   
   const poiLocations: Poi[] = response.locations
-
   .filter(item => 
     item.id &&
     item.location &&
@@ -61,7 +52,6 @@ async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
     typeof item.message_text === 'string' && 
     typeof item.ai_text === 'string'
   )
-
   .map(item => ({
     key: item.id,
     location: {
@@ -76,24 +66,22 @@ async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
 }
 
 
-
+// Todo: 分離する
 export function GoogleMapContent (){
 
   const { location } = useUserLocation(); 
 
-  // 1. 地図の中心をstateとして管理する
   const [mapCenter, setMapCenter] = useState(defaultCenter);
 
   const cachedPois = useRef<Map<number, Poi>>(new Map());  
   const [visiblePois, setVisiblePois] = useState<Poi[]>([]); 
 
-  // const [pois, setPois] = useState<Poi[]>([]);
-
   const idleTimer = useRef<number | null>(null);
-  const prevBoundsRef = useRef<MapBounds | null>(null);
+  const lastFetchedCenterRef = useRef<{ latitude: number, longitude: number } | null>(null);
 
   const handleIdle = (ev: MapEvent) => {
     if (idleTimer.current) window.clearTimeout(idleTimer.current)
+    console.log(ev);
     idleTimer.current = window.setTimeout(async () => {
       const map = ev.map;
       const bounds = map.getBounds();
@@ -104,30 +92,43 @@ export function GoogleMapContent (){
         return;
       }
 
-      const ne = bounds.getNorthEast();
-      const sw = bounds.getSouthWest();
-      const north = truncateDecimal(ne.lat(), 5);
-      const south = truncateDecimal(sw.lat(), 5);
-      const east = truncateDecimal(ne.lng(), 5);
-      const west = truncateDecimal(sw.lng(), 5);
-
-      const news = { north, south, east, west };
-
-      // 前回の bounds と比較（小数点4桁）
-      const prev = prevBoundsRef.current;
-      if (
-        prev &&
-        prev.north === news.north &&
-        prev.south === news.south &&
-        prev.east === news.east &&
-        prev.west === news.west
-      ) {
-        // 変化なければ API 呼ばない
+      const currentCenter = map.getCenter();
+      if (!currentCenter) {
+        console.warn("マップの中心座標が取得できませんでした。");
         return;
       }
-      prevBoundsRef.current = news;
+
+      const currentCenterLatLng = {
+        latitude: currentCenter.lat(),
+        longitude: currentCenter.lng(),
+      };
+      const THRESHOLD_DISTANCE_METERS = 1000;
+
+      if (lastFetchedCenterRef.current) {
+        const distance = getDistance(
+          lastFetchedCenterRef.current,
+          currentCenterLatLng
+        );
+        
+        if (distance < THRESHOLD_DISTANCE_METERS) {
+          console.log(`移動距離 ${Math.round(distance)}m は閾値未満。APIコールをスキップ。`);
+          return;
+        }
+      }
+
+
+      // Todo:簡潔なコードが書けないか探す
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
+      const north = ne.lat();
+      const south = sw.lat();
+      const east = ne.lng();
+      const west = sw.lng();
+      const news = { north, south, east, west };
 
       const newPois = await fetchAndFormatLocations(news);
+
+      lastFetchedCenterRef.current = currentCenterLatLng;
 
       newPois.forEach(poi => {
         if (!cachedPois.current.has(poi.key)) {
@@ -143,12 +144,9 @@ export function GoogleMapContent (){
         }
       }
       setVisiblePois(poisInView);
-    }, 800);
+    }, 400);
   };
 
-
-
-  // 2. location stateが変更されたら副作用としてmapCenterを更新する
   useEffect(() => {
     if (typeof location.lat === 'number' && typeof location.lng === 'number') {
       setMapCenter({
@@ -157,7 +155,6 @@ export function GoogleMapContent (){
       });
     }
   }, [location]);
-  // console.log(location);
 
   return (
     <div style={{ width: '100%', height: 400 }}>
@@ -168,7 +165,7 @@ export function GoogleMapContent (){
         mapId={process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID || ''}
         disableDefaultUI={true}
         gestureHandling={'greedy'}
-        onIdle={handleIdle}
+        onBoundsChanged={handleIdle}
       >
         <PoiMarkers pois={visiblePois} />
       </GoogleMap>
