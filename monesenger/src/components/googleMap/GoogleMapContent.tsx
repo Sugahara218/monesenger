@@ -81,7 +81,6 @@ export function GoogleMapContent (){
 
   const handleIdle = (ev: MapEvent) => {
     if (idleTimer.current) window.clearTimeout(idleTimer.current)
-    console.log(ev);
     idleTimer.current = window.setTimeout(async () => {
       const map = ev.map;
       const bounds = map.getBounds();
@@ -111,7 +110,6 @@ export function GoogleMapContent (){
         );
         
         if (distance < THRESHOLD_DISTANCE_METERS) {
-          console.log(`移動距離 ${Math.round(distance)}m は閾値未満。APIコールをスキップ。`);
           return;
         }
       }
