@@ -3,7 +3,6 @@
 import { searchSerial } from "@/app/_actions";
 import { FormEvent, useState } from "react";
 
-
 export interface Message {
   id: number;
   message_text: string;

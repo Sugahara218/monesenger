@@ -21,10 +21,10 @@ export const SearchForm = ({
         <form onSubmit={async (e)=>{
           handleSearch(e);
           const res = await searchLocation(serial);
-          console.log(res);
+          // console.log(res);
           if (res?.locations?.length && res?.locations[0] !== null) {
             const { lat, lng } = res?.locations[0];
-            console.log(lat, lng);
+            // console.log(lat, lng);
             moveMap({ lat, lng });
           }
         }} className="search-form">

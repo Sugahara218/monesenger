@@ -46,14 +46,10 @@ export const PoiMarkers = (props: { pois: Poi[] }) => {
         }
       });
     };
-  
     return (
         <>
           {props.pois.map((poi: Poi) => {
-           
             const aiResponse = parseAiText(poi);
-      
-            
             return (
               <React.Fragment key={poi.key}>
                 <AdvancedMarker

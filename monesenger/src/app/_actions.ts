@@ -22,6 +22,7 @@ interface LocationItem {
   location: LocationData | null;
   message_text: string,
   ai_text: string,
+  serial_number: string,
 }
 
 interface DBResponseHaveID {
@@ -72,7 +73,7 @@ export async function addNote(formData: FormData,location:object){
     console.error('Error inserting message:', messageError);
     return { message: 'データベースエラーが発生しました。(messages)' };
   }
-  console.log(aiText);
+  // console.log(aiText);
   revalidatePath('/serials');
   return { message: `シリアル番号「${serialNumber}」に新しい思い出を登録しました。` , aiMessage: aiText };
 }
@@ -155,16 +156,45 @@ export async function searchLocation(serialNumber:string) {
     console.error('Search error:', error);
     return null;
   }
-  console.log(serialNumber);
+  // console.log(serialNumber);
 
   const jsonData ={
     locations: data.map(item => item.location)
   };
 
-  console.log(jsonData);
+  // console.log(jsonData);
 
   return jsonData as DBResponse || null;
 }
+
+export async function searchLocationID(message_id: number) {
+  if (!message_id) return null;
+
+  const { data, error } = await supabase
+    .from('messages')      // 「messagesテーブルから」
+    .select('location')    // 「locationだけちょーだい」
+    .eq('id', message_id)  // 「idがこれと同じやつな」
+    .single();             // 「絶対1個だけやから、それで頼むわ」
+
+  if (error) {
+    console.error('Search error:', error);
+    return null;
+  }
+  
+  if (!data) {
+    return null;
+  }
+
+  const responseData = {
+    locations: [data.location] 
+  };
+  
+  // console.log('取得したデータ:', responseData);
+
+  // 型のお約束を守って返す
+  return responseData as DBResponse; 
+}
+
 
 /**
  * 
@@ -176,8 +206,8 @@ export async function searchLocation(serialNumber:string) {
  */
 export async function searchLocationsInBounds(north: number, south: number, east: number, west: number) {
 
-  console.log(north,south,east,west);
-  const { data, error } = await supabase.rpc('search_locations_in_bounds_v2', {
+  // console.log(north,south,east,west);
+  const { data, error } = await supabase.rpc('search_locations_in_bounds_v3', {
     north,
     south,
     east,
@@ -188,13 +218,13 @@ export async function searchLocationsInBounds(north: number, south: number, east
     console.error('Search error:', error);
     return null;
   }
-  console.log(data);
+  // console.log(data);
 
   const jsonData = {
     locations: data,
   };
 
-  console.log("取得した位置情報:", jsonData);
+  // console.log("取得した位置情報:", jsonData);
 
   return jsonData as DBResponseHaveID || null;
 }

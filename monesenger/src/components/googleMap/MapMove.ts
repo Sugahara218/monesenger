@@ -5,6 +5,6 @@ export function useLatLngController() {
   const map = useMap();
   return ({ lat, lng }: { lat: number; lng: number }) => {
     map?.panTo({ lat, lng });
-    map?.setZoom(15);
+    map?.setZoom(17);
   };
 }

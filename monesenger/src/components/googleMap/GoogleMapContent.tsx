@@ -1,16 +1,18 @@
 'use client';
-import {  Map as GoogleMap, MapEvent } from '@vis.gl/react-google-maps';
+import {  ControlPosition, Map as GoogleMap, MapControl, MapEvent } from '@vis.gl/react-google-maps';
 import { useUserLocation } from './UserLocation';
 import { useEffect, useRef, useState } from 'react';
 import { searchLocationsInBounds } from '@/app/_actions';
 import { PoiMarkers } from './PoiMarkers';
 import { getDistance } from 'geolib';
+import { MapInContents } from './mapComponents/MapInContents';
 
 export interface Poi {
   key: number;
   location: { lat: number; lng: number; };
   message_text:string;
   ai_text: string;
+  serial_number:string;
 }
 
 interface MapBounds {
@@ -60,6 +62,7 @@ async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
     },
     message_text: item.message_text,
     ai_text: item.ai_text,
+    serial_number:item.serial_number,
   }));
 
   return poiLocations;
@@ -79,6 +82,7 @@ export function GoogleMapContent (){
   const idleTimer = useRef<number | null>(null);
   const lastFetchedCenterRef = useRef<{ latitude: number, longitude: number } | null>(null);
 
+
   const handleIdle = (ev: MapEvent) => {
     if (idleTimer.current) window.clearTimeout(idleTimer.current)
     idleTimer.current = window.setTimeout(async () => {
@@ -86,7 +90,7 @@ export function GoogleMapContent (){
       const bounds = map.getBounds();
       const zoom = map.getZoom() ?? 0;
 
-      if (!bounds || zoom < 11) {
+      if (!bounds || zoom < 9) {
         setVisiblePois([]);
         return;
       }
@@ -101,7 +105,7 @@ export function GoogleMapContent (){
         latitude: currentCenter.lat(),
         longitude: currentCenter.lng(),
       };
-      const THRESHOLD_DISTANCE_METERS = 1000;
+      const THRESHOLD_DISTANCE_METERS = 500;
 
       if (lastFetchedCenterRef.current) {
         const distance = getDistance(
@@ -109,11 +113,11 @@ export function GoogleMapContent (){
           currentCenterLatLng
         );
         
-        if (distance < THRESHOLD_DISTANCE_METERS) {
+        if (visiblePois.length && distance < THRESHOLD_DISTANCE_METERS) {
+          console.log("700 > "+distance+"スキップします。");
           return;
         }
       }
-
 
       // Todo:簡潔なコードが書けないか探す
       const ne = bounds.getNorthEast();
@@ -142,7 +146,7 @@ export function GoogleMapContent (){
         }
       }
       setVisiblePois(poisInView);
-    }, 400);
+    }, 200);
   };
 
   useEffect(() => {
@@ -153,9 +157,9 @@ export function GoogleMapContent (){
       });
     }
   }, [location]);
-
+  
   return (
-    <div style={{ width: '100%', height: 400 }}>
+    <div style={{ width: '100%', height: 400 ,} } className='googleMapContents'>
       <GoogleMap
         key={`${mapCenter.lat},${mapCenter.lng}`}
         defaultZoom={13}
@@ -165,11 +169,12 @@ export function GoogleMapContent (){
         gestureHandling={'greedy'}
         onBoundsChanged={handleIdle}
       >
+      <MapControl position={ControlPosition.TOP_LEFT}>
+          <MapInContents pois={visiblePois}/>
+      </MapControl>
+        
         <PoiMarkers pois={visiblePois} />
       </GoogleMap>
     </div>
   );
 };
-
-
-

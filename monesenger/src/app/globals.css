@@ -56,6 +56,10 @@
     min-height: 100vh;
     margin: 0;
   }
+  p,h1,h2,h3,h4,h5{
+    margin: 0;
+    padding: 0;
+  }
 
   ::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.1);
@@ -545,6 +549,11 @@
 
   .form-input:focus + .form-label {
     color: rgba(251, 191, 36, 0.1);
+  }
+
+
+  .googleMapContents{
+    position: relative;
   }
 
   .form-textarea {
@@ -1042,6 +1051,12 @@
 
   /* レスポンシブデザイン */
   @media (max-width: 768px) {
+    .googleMapIncontents {
+      margin: 0 !important;
+    }
+    .scrollArea{
+      max-height: 12vh !important;
+    }
 
     .mobile-menu-button {
       display: block;
