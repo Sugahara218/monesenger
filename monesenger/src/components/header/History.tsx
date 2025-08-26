@@ -1,12 +1,20 @@
 import { searchSerialToUser } from '@/app/_actions';
-import { auth } from '@clerk/nextjs/server';
-import React from 'react'
+import React, { use } from 'react'
 import PropoverHistory from './PopoverHistory';
 
-export default async function History() {
-    const { userId }: { userId: string | null } = await auth();
-    const userMessages = await searchSerialToUser(userId);
+type UserMessagesPromise =
+      ReturnType<typeof
+      searchSerialToUser>;
 
+interface HistoryProps {
+    userId: string | null;
+    userMessagesPromise:UserMessagesPromise;
+}
+
+export default function History({userId,userMessagesPromise}
+:HistoryProps
+) {
+    const userMessages = use(userMessagesPromise);
     return (
         <>
             {userId && userMessages && (

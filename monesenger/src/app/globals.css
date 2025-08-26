@@ -561,7 +561,7 @@
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    color: #00000070;
+    color: dimgray;
     font-size: 0.875rem;
     resize: vertical;
     min-height: 120px;
@@ -572,7 +572,7 @@
     border: 1px solid #000;
   }
 
-  .form-textarea::placeholder {
+  .form-textarea::placeholder, .form-input::placeholder {
     color: rgba(0, 0, 0, 0.4);
   }
 
@@ -734,6 +734,11 @@
 
   .input-group .form-input {
     flex: 1;
+  }
+
+  .contentsInPopOver:hover{
+    background-color: #f0f5ff !important;
+    transition: 0.25s;
   }
 
   .camera-button-register {

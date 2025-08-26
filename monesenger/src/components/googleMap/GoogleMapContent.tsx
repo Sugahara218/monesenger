@@ -39,7 +39,6 @@ async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
   const { north, south, east, west } = bounds;
   const response = await searchLocationsInBounds(north, south, east, west);
 
-
   if (!response || !response.locations) {
     console.log("位置情報が見つかりませんでした。");
     return [];
@@ -71,17 +70,12 @@ async function fetchAndFormatLocations(bounds: MapBounds): Promise<Poi[]> {
 
 // Todo: 分離する
 export function GoogleMapContent (){
-
   const { location } = useUserLocation(); 
-
   const [mapCenter, setMapCenter] = useState(defaultCenter);
-
   const cachedPois = useRef<Map<number, Poi>>(new Map());  
   const [visiblePois, setVisiblePois] = useState<Poi[]>([]); 
-
   const idleTimer = useRef<number | null>(null);
   const lastFetchedCenterRef = useRef<{ latitude: number, longitude: number } | null>(null);
-
 
   const handleIdle = (ev: MapEvent) => {
     if (idleTimer.current) window.clearTimeout(idleTimer.current)
@@ -105,7 +99,7 @@ export function GoogleMapContent (){
         latitude: currentCenter.lat(),
         longitude: currentCenter.lng(),
       };
-      const THRESHOLD_DISTANCE_METERS = 500;
+      const THRESHOLD_DISTANCE_METERS = 1000;
 
       if (lastFetchedCenterRef.current) {
         const distance = getDistance(
@@ -113,8 +107,8 @@ export function GoogleMapContent (){
           currentCenterLatLng
         );
         
-        if (visiblePois.length && distance < THRESHOLD_DISTANCE_METERS) {
-          console.log("700 > "+distance+"スキップします。");
+        if (distance < THRESHOLD_DISTANCE_METERS) {
+          console.log(`${THRESHOLD_DISTANCE_METERS} > ${distance} skip `);
           return;
         }
       }
@@ -133,13 +127,12 @@ export function GoogleMapContent (){
       lastFetchedCenterRef.current = currentCenterLatLng;
 
       newPois.forEach(poi => {
-        if (!cachedPois.current.has(poi.key)) {
-          cachedPois.current.set(poi.key, poi);
-        }
+        cachedPois.current.set(poi.key, poi);
       });
 
       const poisInView: Poi[] = [];
       for (const poi of cachedPois.current.values()) {
+        console.log(cachedPois.current.values());
         const { lat, lng } = poi.location;
         if (lat >= south && lat <= north && lng >= west && lng <= east) {
           poisInView.push(poi);
@@ -173,7 +166,7 @@ export function GoogleMapContent (){
           <MapInContents pois={visiblePois}/>
       </MapControl>
         
-        <PoiMarkers pois={visiblePois} />
+        <PoiMarkers pois={visiblePois}/>
       </GoogleMap>
     </div>
   );

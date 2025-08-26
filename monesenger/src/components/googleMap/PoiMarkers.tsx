@@ -19,9 +19,9 @@ export const PoiMarkers = (props: { pois: Poi[] }) => {
       }
     }, [map]);
   
-    useEffect(()=>{
-      setMarkers({});
-    },[props.pois])
+    // useEffect(()=>{
+    //   setMarkers({});
+    // },[props.pois])
   
     useEffect(() => {
       clusterer.current?.clearMarkers();

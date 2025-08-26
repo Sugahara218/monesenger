@@ -9,15 +9,39 @@ type AiMessageType = {
   summary: string;
 };
 
-
 export default function RegisterPage() {
   const [serial, setSerial] = useState('');
   const [story, setStory] = useState('');
   const [message, setMessage] = useState('');
   const [aiMessageState, setAiMessageState] = useState<AiMessageType | null>(null);
   const [ocrMessage, setOcrMessage] = useState('');
+  const [descriptionMessage, setdescriptionMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { location } = useUserLocation(); 
+
+  const handleDescription = async (file: File) => {
+    if (!file) return;
+    setdescriptionMessage('AIが要約を考え中...');
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch('/api/description', { method: 'POST', body: formData });
+      if (!response.ok) throw new Error('サーバーでエラーが発生しました。');
+      const data = await response.json();
+      if (data.text) {
+        setStory(data.text.toUpperCase());
+        setdescriptionMessage('要約が完了しました。');
+      } else {
+        setdescriptionMessage('要約できませんでした。');
+      }
+    } catch (error) {
+      console.error('OCR Error:', error);
+      setdescriptionMessage('解析中にエラーが発生しました。');
+    } finally {
+      setTimeout(() => setdescriptionMessage(''), 3000);
+    }
+  };
 
   const handleOcr = async (file: File) => {
     if (!file) return;
@@ -87,15 +111,30 @@ export default function RegisterPage() {
           <div className="form-field">
             <label htmlFor="register-serial" className="form-label">お札のシリアルナンバー</label>
             <div className="input-group mt-2">
-              <input type="text" id="register-serial" name="serial_number" value={serial} onChange={(e) => setSerial(e.target.value.toUpperCase())} className="form-input" placeholder="例: AB1234567C" required />
-              <input type="file" id="register-ocr-input" className="hidden" accept="image/*" onChange={(e) => e.target.files && handleOcr(e.target.files[0])} />
+              <input readOnly type="text" style={{background: "darkgrey",}} id="register-serial" name="serial_number" value={serial} onChange={(e) => setSerial(e.target.value.toUpperCase())} className="form-input" placeholder="カメラで撮影してください。" required />
+              <input type="file" id="register-ocr-input" className="hidden" accept="image/*" onChange={(e) => {
+                if (e.target.files) {
+                  handleOcr(e.target.files[0]);
+                  e.target.value = '';
+                }
+              }} />
               <label htmlFor="register-ocr-input" className="camera-button-register">📷</label>
             </div>
           </div>
           <div className="form-field">
-            <label htmlFor="story" className="form-label">思い出（ストーリー）</label>
+            {descriptionMessage && <div className="ocr-message mx-auto max-w-xl">{descriptionMessage}</div>}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',margin:"10px 0"}}>
+              <label htmlFor="story" className="form-label">想い出（ストーリー）</label>
+              <input type="file" id="register-description-input" className="hidden" accept="image/*" onChange={(e) => {
+                if (e.target.files) {
+                  handleDescription(e.target.files[0]);
+                  e.target.value = '';
+                }
+              }} />
+              <label htmlFor="register-description-input" className="camera-button-register"style={{padding:"0 5px",}}>風景を要約する</label>
+            </div>
             <div className="mt-2">
-              <textarea id="story" name="story" value={story} onChange={(e) => setStory(e.target.value)} rows={4} className="form-textarea" placeholder="このお札にまつわるエピソードや思い出を書いてください..." required></textarea>
+              <textarea id="story" name="story" value={story} onChange={(e) => setStory(e.target.value)} rows={4} className="form-textarea" placeholder="このお札にまつわるエピソードや思い出を書いてください..." required>{}</textarea>
             </div>
           </div>
 
@@ -105,7 +144,7 @@ export default function RegisterPage() {
             disabled={isSubmitting} 
           >
             {isSubmitting ? (
-              <span className="flex items-center justify-center register-button-now">
+              <span className="">
                 登録中...
               </span>
             ) : (

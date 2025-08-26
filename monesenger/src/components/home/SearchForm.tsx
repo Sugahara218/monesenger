@@ -50,7 +50,6 @@ export const SearchForm = ({
             type="submit"
             disabled={isLoading}
             className="register-button-Simple"
-            
           >
             {isLoading ? (
               <>

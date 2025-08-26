@@ -7,17 +7,22 @@ import {
 } from '@clerk/nextjs'
 import History from "@/components/header/History";
 import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
+import { auth } from "@clerk/nextjs/server";
+import { searchSerialToUser } from "./_actions";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "お札の想い出記録帳",
   description: "お札のシリアル番号に、あなたの想い出を刻みましょう。",
 };
 
-export default function RootLayout({
+export  default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { userId } = await auth();
+  const userMessagesPromise = searchSerialToUser(userId);
   return (
     <ClerkProvider>
       <html lang="ja">
@@ -31,7 +36,9 @@ export default function RootLayout({
                 <div className='flex flex-row gap-y-4'>
                   <UserButton />
                 </div>
-                <History/>
+                <Suspense fallback={<div>ローディング中…</div>}>
+                  <History userMessagesPromise = {userMessagesPromise} userId={userId}/>
+                </Suspense>
               </nav>
             </div>
           </header>

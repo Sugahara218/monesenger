@@ -25,16 +25,15 @@ export async function POST(req: NextRequest) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
-    const prompt = "この画像の中から、9桁の英数字で構成されるシリアル番号を一つだけ抽出してください。それ以外の説明や文字列は一切含めず、シリアル番号のみを返答してください。もし紙幣ではないものだった場合は、空白を返答してください。";
+    const prompt = "あなたは、ユーザーが撮影した写真を元に、日記風に美しい日本語で自然に、要約を生成するクリエイティブアシスタントです。50文字以上でお願いします。それ以外の説明や文字列は一切含めず、要約のみを返答してください。";
     const imagePart = await fileToGenerativePart(file);
 
     const result = await model.generateContent([prompt, imagePart]);
     const response = await result.response;
-    const text = response.text();
-
-    const serial = text.trim().replace(/\s/g, '');
-
-    return NextResponse.json({ serial });
+    const text = response.text().trim().replace(/\s/g, '');
+    console.log(text);
+    // const serial = text.trim().replace(/\s/g, '');
+    return NextResponse.json({ text });
 
   } catch (error) {
     console.error(error);

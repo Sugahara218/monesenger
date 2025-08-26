@@ -18,7 +18,7 @@ export function SearchSection() {
 
   return (
     <>
-      {ocrMessage && <p className="text-center text-blue-400 shimmer">{ocrMessage}</p>}
+      {ocrMessage && <p className="ocr-message mx-auto max-w-xl">{ocrMessage}</p>}
 
       <SearchForm
       handleSearch={handleSearch}

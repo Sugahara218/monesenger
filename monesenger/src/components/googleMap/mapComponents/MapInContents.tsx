@@ -31,7 +31,7 @@ export function MapInContents (props: { pois: Poi[] }){
   };
 
   return (
-    <div style={{background:"white",minWidth:"100%",maxWidth:"100%",display:"flex",flexDirection:"column",borderRadius:"16px",margin:"0.5rem",boxShadow:"0 12px 40px rgba(0, 0, 0, 0.15)"}}className="googleMapIncontents">
+    <div style={{background:"white",minWidth:"180px",maxWidth:"100%",display:"flex",flexDirection:"column",borderRadius:"16px",padding:"8px",boxShadow:"0 12px 40px rgba(0, 0, 0, 0.15)",margin:"4px",}}className="googleMapIncontents">
       <ScrollArea.Root
           type="always"
           style={{
@@ -44,28 +44,31 @@ export function MapInContents (props: { pois: Poi[] }){
             style={{
               width: "100%",
               minHeight: "100%",
-              margin:"12px",
             }} className="scrollArea"
           >
             {props.pois.length > 0 ? <div style={{display:"flex"}}><h4 style={{marginBottom:"6px"}}>現在地のメッセージ:</h4><h3 style={{marginBottom:"6px"}}>{props.pois.length}件</h3></div> : <div><h3>現在地のメッセージ一覧</h3><br /><p>見つかりませんでした。</p><br /><p onClick={()=>moveMap(himejiLocation)} style={{
                     marginBottom:"6px",
                     cursor: "pointer",
                     borderRadius: '4px',
+                    width:"95%",
+                    background: "khaki",
                   }}>🔥姫路市がオススメです🔥</p></div>}
             {props.pois && props.pois.map((poi: Poi) => {
               const aiResponse = parseAiText(poi);
               const isSelected = activeSerialKey === poi.key;
               return (
                 <div key={poi.key}>
-                  <p onClick ={()=>handleItemClick(poi.key)} 
+                  <p onClick ={()=>handleItemClick(poi.key)}className="contentsInPopOver" 
                   style={{
                     marginBottom:"6px",
                     cursor: "pointer",
-                    color: isSelected ? 'blue' : 'black', 
-                    fontWeight: isSelected ? 'bold' : 'normal',
+                    color: 'black', 
+                    fontWeight: 'normal',
                     backgroundColor: isSelected ? '#f0f8ff' : 'transparent',
-                    padding: '4px 8px',
+                    // padding: '4px 8px',
                     borderRadius: '4px',
+                    width: "95%",
+                    
                   }}>
                   {aiResponse.title}</p>
                 </div>

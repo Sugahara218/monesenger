@@ -30,7 +30,7 @@ export default function PropoverHistory({
       </PopoverTrigger>
       <PopoverContent
         style={{
-          width: "400px",
+          width: "330px",
           padding: "16px",
           backgroundColor: "#1a1a1a",
           color: "#fff",
